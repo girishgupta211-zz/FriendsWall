@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block title %}{% endblock %}
+
+
+{% block content %}
+
+  <div class="container">
+    <h1>{{ title }}</h1>
+
+    <a href="/home" class="btn btn-info" role="button">Back To Home</a>
+
+    <ul>
+      {% for user in reqs %}
+        <li>{{user.firstName}} {{user.lastName}} email: {{user.email}} phone: {{user.phone}}</li>
+        <a href="/approve/{{user.id}}">Accept as a Friend</a>
+      {% endfor %}
+    </ul>
+    <br>
+
+  </div>
+
+
+{% endblock %}

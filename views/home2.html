@@ -1,0 +1,273 @@
+{% extends 'layout.html' %}
+
+{% block title %}{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row profile">
+		<div class="col-md-3">
+			<div class="profile-sidebar">
+				<!-- SIDEBAR USERPIC -->
+				<div class="profile-userpic">
+					{% if user.picName %}
+						<img src="/images/{{user.picName}}" class="img-responsive" alt="">
+					{%else%}
+						<img src="/images/defaultPic.jpg" class="img-responsive" alt="">
+					{% endif %}
+				</div>
+				<!-- END SIDEBAR USERPIC -->
+				<!-- SIDEBAR USER TITLE -->
+				<div class="profile-usertitle">
+					<div class="profile-usertitle-name">
+						{{user.firstName}} {{user.lastName}}
+					</div>
+					<div class="profile-usertitle-job">
+						Cricketer
+					</div>
+				</div>
+				<!-- END SIDEBAR USER TITLE -->
+				<!-- SIDEBAR BUTTONS -->
+				<div class="profile-userbuttons">
+					<a href="/user/{{user.id}}"><button type="button" class="btn btn-success btn-sm">Edit Profile</button></a>
+					<a href="/signout"><button type="button" class="btn btn-danger btn-sm">Sign Out</button></a>
+				</div>
+				<!-- END SIDEBAR BUTTONS -->
+				<!-- SIDEBAR MENU -->
+				<div class="profile-usermenu">
+					<ul class="nav">
+						<li class="active">
+							<a href="/home">
+							<i class="glyphicon glyphicon-home"></i>
+							Home </a>
+						</li>
+						<li>
+							<a href="/showFriends">
+							<i class="glyphicon glyphicon-user"></i>
+							My Friends </a>
+						</li>
+						<li>
+							<a href="/all" target="_blank">
+							<i class="glyphicon glyphicon-thumbs-up"></i>
+							All Users </a>
+						</li>
+						<li>
+							<a href="/pendingReqs">
+							<i class="glyphicon glyphicon-flag"></i>
+							Pending Friend Requests </a>
+						</li>
+						<li>
+							<a href="/change">
+							<i class="glyphicon glyphicon-flag"></i>
+							Change Password </a>
+						</li>
+					</ul>
+				</div>
+				<!-- END MENU -->
+			</div>
+		</div>
+
+
+
+		<div class="col-md-9">
+   			<div class="profile-content">
+
+	<div>
+		<form action="/updateStatus" method="post" role="form" enctype="multipart/form-data" class="facebook-share-box">
+			<div class="panel panel-default">
+                <div class="panel-heading">Update Status</div>
+                  	<div class="panel-body">
+                    	<div class="">
+                        	<textarea name="statusToUp" cols="40" rows="10" id="status_message" class="form-control message" style="height: 62px; overflow: hidden;" placeholder="What's on your mind ?"></textarea> 
+						</div>
+                  	</div>
+				<div class="panel-footer">
+					<div class="row">
+						<div class="col-md-7">
+							<div class="form-group">
+								<div class="btn-group">
+								  <input type="file" name="statusPic" id="status-file">
+								  <button type="button" class="btn btn-default file-upload"><i class="icon icon-picture"></i> Photo</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="form-group">                         
+								<input type="submit" name="submit" value="Post" class="btn btn-primary pull-right">
+							</div>
+						</div>
+					</div>
+				</div>
+            </div>
+		</form>
+	</div> 
+
+		{% for status in statuses %}
+		
+			<div class="panel panel-default panel-google-plus" id="{{status.id}}">
+		        <div class="panel-heading">
+		            <img class="[ img-circle pull-left ]" src="/images/{{status.statuserPicName}}" alt="Mouse0270"/>
+		            <h3>{{status.statuserFirstName}} {{status.statuserLastName}}</h3>
+		            <h5><span>Shared publicly</span> - <span>{{status.timeStamp}}</span> </h5>
+		        </div>
+		        <div class="panel-body">
+		            <p>{{status.statusMessage}}</p>
+		            {% if status.statusPicName %}
+		            	<img src="/images/{{status.statusPicName}}" style="width:50%;height:auto"/>
+		            {% endif %}
+				</div>
+				<div class="panel-footer">
+					
+                    <button type="button" class="[ btn btn-default like-unlike ]">
+                    	{% if status.isLiked %}
+                        	<span class="[ glyphicon glyphicon-thumbs-up blue ]"></span>
+                        {% else %}
+                        	<span class="[ glyphicon glyphicon-thumbs-up ]"></span>
+                        {% endif %}
+                    </button>
+
+					<div class="input-placeholder">Add a comment...</div>
+					
+					
+					<a class="likesDisplayer" data-toggle="modal" data-target="#likersModal">{{status.likersCount}} likes</a>
+		        </div> 
+
+		        <div class="panel-google-plus-comment">
+		            <img class="img-circle" src="/images/{{user.picName}}" alt="User Image" style="width:45px;height:45px;"/>
+		            <div class="panel-google-plus-textarea">
+		                <textarea rows="4"></textarea>
+		                <button type="submit" class="[ btn btn-success comment-submit disabled ]">Post comment</button>
+		                <button type="reset" class="[ btn btn-default ]">Cancel</button>
+		            </div>
+					<div class="clearfix"></div>
+				</div>
+
+				<div class="modal fade" id="likersModal" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">People who liked it</h4>
+                            </div>
+                            <div class="modal-body">
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="comments">
+					{% for comment in status.comments %}
+					<div class="media">
+	  					<div class="media-left">
+	    					<a href="#">
+	    						{% if comment.commenterPicName %}
+	      						<img class="media-object" src="/images/{{comment.commenterPicName}}" alt="..." style="width:50px;height:50px;">
+	      						{% else %}
+	      						<img class="media-object" src="/images/defaultPic.jpg" alt="..." style="width:45px;height:45px;">
+	      						{% endif %}
+	    					</a>
+						</div>
+						<div class="media-body">
+							<h6 class="media-heading" style="color:blue;font:bold">{{comment.commenterFirstName}} {{comment.commenterLastName}}</h6>
+							<small>
+	                            {{comment.commentMessage}}
+	                        </small>
+	                        <br>
+	                        {% if comment.isLiked %}
+	                        <a class="comment-like" id="{{comment.id}}">Unlike</a>
+	                        {% else %}
+	                        <a class="comment-like" id="{{comment.id}}">Like</a>
+	                        {% endif %}
+	                        <a class="comment-reply">Reply</a>
+	                        <a href="/foo" class="[ comment-likes-displayer ]"><span class="[ glyphicon glyphicon-thumbs-up ]">{{comment.likersCount}}</span></a>
+	                        <a href="/foo" class="[ comment-replies-displayer ]"><span class="glyphicon glyphicon-share-alt">1</span></a>
+	                        
+	                        <br>
+	                        <div class='comment-reply-box hide-box'>
+		                        <textarea rows="1" placeholder="Write a reply here..."></textarea>
+	                        </div>
+						</div>
+					</div>
+
+	                {% endfor%}
+	                <br>
+	                {% if status.hasMore %}
+	                <a href="/foo" class="view-more-comments"><small>View {{status.hasMore}} more comments</small></a>
+	                {% endif %}
+				</div>
+			</div>
+		{% endfor %}
+                 
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default statusSample" id="" style="display:none">
+    <div class="panel-heading">
+        <img class="[ img-circle pull-left ]" src="" alt="Mouse0270"/>
+        <h3></h3>
+        <h5><span>Shared publicly</span> - <span>Jun 27, 2014</span> </h5>
+    </div>
+    <div class="panel-body">
+        <p></p>
+        <img src="" style="width:50%;height:auto"/>
+	</div>
+	<div class="panel-footer">
+		
+        <button type="button" class="[ btn btn-default like-unlike ]">
+            <span class="[ glyphicon glyphicon-thumbs-up ]"></span>
+        </button>
+
+		<div class="input-placeholder">Add a comment...</div>
+		
+		
+		<a class="likesDisplayer" data-toggle="modal" data-target="#likersModal"></a>
+    </div> 
+
+    <div class="panel-google-plus-comment">
+        <img class="img-circle" src="/images/defaultPic.jpg" alt="User Image" style="width:45px;height:45px;"/>
+        <div class="panel-google-plus-textarea">
+            <textarea rows="4"></textarea>
+            <button type="submit" class="[ btn btn-success comment-submit disabled ]">Post comment</button>
+            <button type="reset" class="[ btn btn-default ]">Cancel</button>
+        </div>
+		<div class="clearfix"></div>
+	</div>
+
+	<div class="comments">
+	</div>
+</div>
+
+<div class="mediaSample" style="display:none;">
+	<div class="media-left">
+		<a href="#">
+				<img class="media-object" src="/images/defaultPic.jpg" alt="">
+		</a>
+	</div>
+	<div class="media-body"></div>
+</div>
+
+<div class="commentSample" style="display:none">
+	<div class="media-left">
+		<a href="#">
+				<img class="media-object" src="" alt="..." style="width:50px;height:50px;">
+		</a>
+	</div>
+	<div class="media-body">
+		<h6 class="media-heading" style="color:blue;font:bold"></h6>
+		<small>
+	    </small>
+	    <br>
+	    <a class="comment-like" id="">Like</a>
+	    <text>0</text>
+	</div>
+</div>
+
+{% endblock %}
+
+

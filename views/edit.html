@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}{% endblock %}
+
+
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center login-title">{{title}}</h1>
+            <div class="signup-wall">
+                <form method="post" action="/user/{{user.id}}?_method=PUT" enctype="multipart/form-data">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="firstName" class="form-control" value="{{user.firstName}}" required>
+                    <label>Last Name</label>
+                    <input type="text" name="lastName" class="form-control" value="{{user.lastName}}" required>
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" value="{{user.email}}" required>
+                    <label>Phone</label>
+                    <input type="text" name="phone" class="form-control" value="{{user.phone}}" required>
+                    {% if user.picName %}
+                        <img src="/images/{{user.picName}}" class="img-thumbnail" alt="Cinque Terre" style="width:220px;height:200px;">
+                    {% endif %}
+                    <label>Picture</label>
+                    <input type="file" name="picName" placeholder='Upload Pic'>
+                  </div>
+                  <button type="submit" class="btn btn-default">Update</button>
+                </form>
+            </div>
+            {% if message %}
+            	<h1 class="text-center error-message">{{message}}</h1>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

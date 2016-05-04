@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}{% endblock %}
+
+
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center login-title">{{title}}</h1>
+            <div class="account-wall">
+                <form class="form-signin" action='/changePass' method='POST'>
+                <input type="password" name="oldPass" class="form-control" placeholder="Old Password" required autofocus>
+                <input type="password" name="newPass" class="form-control" placeholder="New Password" required>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                    Submit</button>
+                </form>
+            </div>
+            {% if message %}
+            <h1 class="text-center login-title">{{message}}</h1>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
